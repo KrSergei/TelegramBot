@@ -64,7 +64,7 @@ public class JsonWeather {
     public static String buildWeatherJson() {
         // для простоты примера просто хардкодим нужные данные в методе
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("name", "Лондон");
+        jsonObject.put("name", "Петербург");
         jsonObject.put("main", "Солнечно");
         jsonObject.put("description", "Мороз трескучий, На небе ни единой тучи");
 
