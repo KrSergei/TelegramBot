@@ -18,7 +18,7 @@ public class Bot extends TelegramLongPollingBot {
             if (message.getText().equals("/help"))
                 sendMsg(message, "Привет, я робот");
             if (message.getText().equals("/weather") || message.getText().equals("Weather"))
-                sendMsg(message, "Сейчас погода в Петербурге: " + "\nтемпература C\nвлажность %");
+                sendMsg(message, "Сейчас погода в Петербурге: " + JsonWeather.buildWeatherJson() + "\nтемпература C\nвлажность %");
             else
                 sendMsg(message, "Hello, " + message.getFrom().getFirstName());
         }
