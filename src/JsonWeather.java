@@ -1,5 +1,8 @@
-import org.json.JSONObject;
-import org.json.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.ParseException;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,7 +57,7 @@ public class JsonWeather {
             // и описание к ней
             System.out.println("Более детальное описание погоды: " + weatherData.get("description"));
 
-        } catch (org.json.JSONException e) {
+        } catch (org.json.simple.parser.ParseException e) {
             e.printStackTrace();
         }
     }
