@@ -81,7 +81,15 @@ public class JsonWeather {
         }
     }
 
+    public static int JSONgetWeather (String weather) throws ParseException {
+        JSONObject weatherJsonObject = (JSONObject) JSONValue.parseWithException(weather);
+        //JSONArray jsonArray = (JSONArray) weatherJsonObject.get("weather");
+        JSONObject temp = (JSONObject) weatherJsonObject.get("main");
+        return (Integer) temp.get("temp");
 
+//        System.out.println(weather);
+//        return 0;
+    }
 
 
 }

@@ -1,3 +1,4 @@
+import org.json.simple.parser.ParseException;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
@@ -6,6 +7,7 @@ import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -17,8 +19,13 @@ public class Bot extends TelegramLongPollingBot {
         if (message != null && message.hasText()) {
             if (message.getText().equals("/help"))
                 sendMsg(message, "Привет, я робот");
-            if (message.getText().equals("/weather") || message.getText().equals("Weather"))
-                sendMsg(message, "Сейчас погода в Петербурге: " + JsonWeather.buildWeatherJson() + "\nтемпература C\nвлажность %");
+            if (message.getText().equals("/weather") || message.getText().equals("Weather")) {
+                try {
+                    sendMsg(message, "Сейчас погода в Петербурге: " + JsonWeather.JSONgetWeather(getWeaher()) + "\nтемпература C\nвлажность %");
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
             else
                 sendMsg(message, "Hello, " + message.getFrom().getFirstName());
         }
@@ -55,9 +62,6 @@ public class Bot extends TelegramLongPollingBot {
         // и устанваливаем этот список нашей клавиатуре
         replyKeyboardMarkup.setKeyboard(keyboard);
 
-
-
-
         sendMessage.setChatId(message.getChatId().toString());
         sendMessage.setReplyToMessageId(message.getMessageId());
         sendMessage.setText(text);
@@ -68,8 +72,6 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-
-
     @Override
     public String getBotUsername() {
         return "WeatherBot";
@@ -78,5 +80,18 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public String getBotToken() {
         return "422723427:AAG5at1VNQDw_L2RYhg5AZuRkNGQETeO33w";
+    }
+
+    public static final String WEATHER_URL =
+            "http://api.openweathermap.org/data/2.5/weather?q=Saint Petersburg,ru" + "&units=metric&appid=241de9349721df959d8800c12ca4f1f3";
+
+    private String getWeaher (){
+        URL url = JsonWeather.createUrl(WEATHER_URL);
+
+        // загружаем Json в виде Java строки
+        String resultJson = JsonWeather.parseUrl(url);
+        System.out.println("Полученный JSON:\n" + resultJson);
+
+        return resultJson;
     }
 }
