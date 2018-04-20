@@ -21,7 +21,9 @@ public class Bot extends TelegramLongPollingBot {
                 sendMsg(message, "Привет, я робот");
             if (message.getText().equals("/weather") || message.getText().equals("Weather")) {
                 try {
-                    sendMsg(message, "Сейчас погода в Петербурге: " + JsonWeather.JSONgetWeather(getWeaher()) + "\nтемпература C\nвлажность %");
+                    sendMsg(message, "Сейчас погода в Петербурге: \nтемпература" + JsonWeather.jsonGetTemp(getWeaher()) + "C"
+                            + "\nвлажность " + JsonWeather.jsonGetHumidity(getWeaher()) + "%"
+                    + "\nдавление " + JsonWeather.jsonGetPressure(getWeaher()) + " мм.ртс");
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -90,7 +92,7 @@ public class Bot extends TelegramLongPollingBot {
 
         // загружаем Json в виде Java строки
         String resultJson = JsonWeather.parseUrl(url);
-        System.out.println("Полученный JSON:\n" + resultJson);
+//        System.out.println("Полученный JSON:\n" + resultJson);
 
         return resultJson;
     }
