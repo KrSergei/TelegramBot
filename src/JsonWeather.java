@@ -31,47 +31,9 @@ public class JsonWeather {
         }
         return stringBuilder.toString();
     }
-//    public static void parseCurrentWeatherJson(String resultJson) {
-//        try {
-//            // конвертируем строку с Json в JSONObject для дальнейшего его парсинга
-//            JSONObject weatherJsonObject = (JSONObject) JSONValue.parseWithException(resultJson);
-//
-//            // получаем название города, для которого смотрим погоду
-////            System.out.println("Название города: " + weatherJsonObject.get("name"));
-//
-//            // получаем массив элементов для поля weather
-//            /* ... "weather": [
-//            {
-//                "id": 500,
-//                    "main": "Rain",
-//                    "description": "light rain",
-//                    "icon": "10d"
-//            }
-//            ], ... */
-//            JSONArray weatherArray = (JSONArray) weatherJsonObject.get("weather");
-//            // достаем из массива первый элемент
-//            JSONObject weatherData = (JSONObject) weatherArray.get(0);
-//
-//            // печатаем текущую погоду в консоль
-////            System.out.println("Погода на данный момент: " + weatherData.get("main"));
-////            // и описание к ней
-////            System.out.println("Более детальное описание погоды: " + weatherData.get("description"));
-//
-//        } catch (org.json.simple.parser.ParseException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//    public static String buildWeatherJson() {
-//        // для простоты примера просто хардкодим нужные данные в методе
-//        JSONObject jsonObject = new JSONObject();
-//        jsonObject.put("name", "Сейчас погода в Петербурге");
-//        jsonObject.put("main", "Солнечно");
-//        jsonObject.put("description", "Мороз трескучий, На небе ни единой тучи");
-//
-//        return jsonObject.toString();
-//    }
 
-    // создаем объект URL из указанной в параметре строки
+
+
     public static URL createUrl(String link) {
         try {
             return new URL(link);

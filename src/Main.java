@@ -6,8 +6,6 @@ import java.net.URL;
 
 public class Main {
 
-
-
     public static void main (String args[]){
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
@@ -17,10 +15,5 @@ public class Main {
         } catch (TelegramApiRequestException e) {
             e.printStackTrace();
         }
-
-        // создаем URL из строки
-
-
     }
-
 }
