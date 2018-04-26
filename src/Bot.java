@@ -10,7 +10,7 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
+
 
 public class Bot extends TelegramLongPollingBot {
     @Override
@@ -23,7 +23,7 @@ public class Bot extends TelegramLongPollingBot {
                 try {
                     sendMsg(message, "Сейчас погода в Петербурге: \nтемпература" + JsonWeather.jsonGetTemp(getWeaher()) + "C"
                             + "\nвлажность " + JsonWeather.jsonGetHumidity(getWeaher()) + "%"
-                    + "\nдавление " + JsonWeather.jsonGetPressure(getWeaher()) + " мм.ртс");
+                            + "\nдавление " + JsonWeather.jsonGetPressure(getWeaher()) + " мм.ртс");
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -31,6 +31,7 @@ public class Bot extends TelegramLongPollingBot {
             else
                 sendMsg(message, "Hello, " + message.getFrom().getFirstName());
         }
+        System.out.println(update.getMessage().getChatId());
     }
 
     private void sendMsg(Message message, String text) {
@@ -42,6 +43,10 @@ public class Bot extends TelegramLongPollingBot {
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        sendMessage.setChatId(message.getChatId().toString());
+        sendMessage.setReplyToMessageId(message.getMessageId());
+        sendMessage.setText(text);
 
         // Создаем список строк клавиатуры
         List<KeyboardRow> keyboard = new ArrayList<>();
@@ -56,7 +61,14 @@ public class Bot extends TelegramLongPollingBot {
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         // Добавляем кнопки во вторую строчку клавиатуры
         keyboardSecondRow.add("Weather");
+
+
+        KeyboardRow keyboardtThirdRow = new KeyboardRow();
+        // Добавляем кнопки во вторую строчку клавиатуры
+        keyboardtThirdRow.add("Subscribe");
+        keyboardtThirdRow.add("Unsubscribe");
 //        keyboardSecondRow.add("To Do");
+
 
         // Добавляем все строчки клавиатуры в список
         keyboard.add(keyboardFirstRow);
@@ -64,9 +76,7 @@ public class Bot extends TelegramLongPollingBot {
         // и устанваливаем этот список нашей клавиатуре
         replyKeyboardMarkup.setKeyboard(keyboard);
 
-        sendMessage.setChatId(message.getChatId().toString());
-        sendMessage.setReplyToMessageId(message.getMessageId());
-        sendMessage.setText(text);
+
         try {
             sendMessage(sendMessage);
         } catch (TelegramApiException e) {
