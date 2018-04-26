@@ -21,7 +21,7 @@ public class Bot extends TelegramLongPollingBot {
                 sendMsg(message, "Привет, я робот");
             if (message.getText().equals("/weather") || message.getText().equals("Weather")) {
                 try {
-                    sendMsg(message, "Сейчас погода в Петербурге: \nтемпература" + JsonWeather.jsonGetTemp(getWeaher()) + "C"
+                    sendMsg(message, "Сейчас погода в Петербурге: \nтемпература " + JsonWeather.jsonGetTemp(getWeaher()) + " C"
                             + "\nвлажность " + JsonWeather.jsonGetHumidity(getWeaher()) + "%"
                             + "\nдавление " + JsonWeather.jsonGetPressure(getWeaher()) + " мм.ртс");
                 } catch (ParseException e) {
@@ -31,7 +31,7 @@ public class Bot extends TelegramLongPollingBot {
             else
                 sendMsg(message, "Hello, " + message.getFrom().getFirstName());
         }
-        System.out.println(update.getMessage().getChatId());
+        System.out.println("Пользователь с ID - " + update.getMessage().getChatId() + " запросил погоду.");
     }
 
     private void sendMsg(Message message, String text) {
@@ -63,16 +63,16 @@ public class Bot extends TelegramLongPollingBot {
         keyboardSecondRow.add("Weather");
 
 
-        KeyboardRow keyboardtThirdRow = new KeyboardRow();
-        // Добавляем кнопки во вторую строчку клавиатуры
-        keyboardtThirdRow.add("Subscribe");
-        keyboardtThirdRow.add("Unsubscribe");
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
+        keyboardThirdRow.add("Subscribe");
+        keyboardThirdRow.add("Unsubscribe");
 //        keyboardSecondRow.add("To Do");
 
 
         // Добавляем все строчки клавиатуры в список
         keyboard.add(keyboardFirstRow);
         keyboard.add(keyboardSecondRow);
+        keyboard.add(keyboardThirdRow);
         // и устанваливаем этот список нашей клавиатуре
         replyKeyboardMarkup.setKeyboard(keyboard);
 
