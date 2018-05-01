@@ -8,11 +8,14 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-
+import java.sql.Date;
 
 public class Bot extends TelegramLongPollingBot {
+
     @Override
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
@@ -32,7 +35,29 @@ public class Bot extends TelegramLongPollingBot {
                 sendMsg(message, "Hello, " + message.getFrom().getFirstName());
         }
         System.out.println("Пользователь с ID - " + update.getMessage().getChatId() + " запросил погоду.");
+
+        if (message.getText().equals("Subscribe")) {
+            if (ConnectDB.conn != null) {
+                sendMsg(message, "Вы уже подписаны!");
+            } else {
+                try {
+//                   long chatId = update.getMessage().getChatId();
+                    ConnectDB.Conn();
+                    ConnectDB.WriteDB( update.getMessage().getChatId());
+                    ConnectDB.CloseDB();
+
+
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                sendMsg(message, "Вы подписались на рассылку прогноза погоды!");
+            }
+            System.out.println("Пользователь с ID - " + update.getMessage().getChatId() + " подписался на прогноз погоды.");
+        }
     }
+
 
     private void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
@@ -54,25 +79,17 @@ public class Bot extends TelegramLongPollingBot {
         // Первая строчка клавиатуры
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         // Добавляем кнопки в первую строчку клавиатуры
-        keyboardFirstRow.add("Help");
-        keyboardFirstRow.add("Settings");
+        keyboardFirstRow.add("Weather");
 
         // Вторая строчка клавиатуры
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         // Добавляем кнопки во вторую строчку клавиатуры
-        keyboardSecondRow.add("Weather");
-
-
-        KeyboardRow keyboardThirdRow = new KeyboardRow();
-        keyboardThirdRow.add("Subscribe");
-        keyboardThirdRow.add("Unsubscribe");
-//        keyboardSecondRow.add("To Do");
-
+        keyboardSecondRow.add("Subscribe");
+        keyboardSecondRow.add("Unsubscribe");
 
         // Добавляем все строчки клавиатуры в список
         keyboard.add(keyboardFirstRow);
         keyboard.add(keyboardSecondRow);
-        keyboard.add(keyboardThirdRow);
         // и устанваливаем этот список нашей клавиатуре
         replyKeyboardMarkup.setKeyboard(keyboard);
 
