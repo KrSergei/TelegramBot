@@ -12,10 +12,9 @@ public class ConnectDB {
     // --------ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ--------
     public static void Conn() throws ClassNotFoundException, SQLException
     {
-        conn = null;
+
         Class.forName("org.sqlite.JDBC");
         conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\S\\source\\repos\\Java\\TelegramBot\\DB\\WeatherBot_DB.s3db");
-
         System.out.println("База Подключена!");
     }
 //
@@ -28,14 +27,13 @@ public class ConnectDB {
 //    }
 
     // --------Заполнение таблицы--------
-    public static void WriteDB(long chatId) throws SQLException
+    public static void WriteDB(long chatId, Date date) throws SQLException
     {
 
-       PreparedStatement statmt=conn.prepareStatement("INSERT INTO signed_users ('chatId') VALUES ('"+ chatId +"'); ");
-//       statmt.setInt(1, chatId);
-//        statmt.setDate(2, date);
-          statmt.executeUpdate();
-            System.out.println("Запись в таблицу завершена");
+        statmt=conn.createStatement();
+//        statmt=conn.prepareStatement("INSERT INTO signed_users ('chatId', 'date') VALUES ('"+ chatId +"', '"+ date +"'); ");
+       statmt.execute("INSERT INTO signed_users ('chatId', 'date') VALUES ('"+ chatId +"', '"+ date +"'); ");
+       System.out.println("Запись в таблицу завершена");
     }
 
 //    // -------- Вывод таблицы--------
@@ -57,10 +55,10 @@ public class ConnectDB {
 //    }
 
     // --------Закрытие--------
-    public static void CloseDB() throws ClassNotFoundException, SQLException
-    {
-        conn.close();
-//        statmt.close();
+    public static void CloseDB() throws ClassNotFoundException, SQLException {
+
+            statmt.close();
+            conn.close();
 //        resSet.close();
 
         System.out.println("Соединения закрыты");
@@ -68,4 +66,3 @@ public class ConnectDB {
 
 }
 
-//" + chatId + ", " + firstname +" "+ date +"

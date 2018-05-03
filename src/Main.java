@@ -16,11 +16,5 @@ public class Main {
         } catch (TelegramApiRequestException e) {
             e.printStackTrace();
         }
-
-//        ConnectBD.Conn();
-////        ConnectBD.CreateDB();
-////        ConnectBD.WriteDB();
-////        ConnectBD.ReadDB();
-//        ConnectBD.CloseDB();
     }
 }

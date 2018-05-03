@@ -9,10 +9,14 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.util.TimeZone;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.sql.Date;
+
+import static java.util.Calendar.*;
 
 public class Bot extends TelegramLongPollingBot {
 
@@ -37,25 +41,29 @@ public class Bot extends TelegramLongPollingBot {
         System.out.println("Пользователь с ID - " + update.getMessage().getChatId() + " запросил погоду.");
 
         if (message.getText().equals("Subscribe")) {
-            if (ConnectDB.conn != null) {
-                sendMsg(message, "Вы уже подписаны!");
-            } else {
+            if (ConnectDB.conn == null ) {
                 try {
-//                   long chatId = update.getMessage().getChatId();
                     ConnectDB.Conn();
-                    ConnectDB.WriteDB( update.getMessage().getChatId());
+                    ConnectDB.WriteDB( update.getMessage().getChatId(), new Date(getInstance().getTimeInMillis()));
                     ConnectDB.CloseDB();
-
 
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+
                 sendMsg(message, "Вы подписались на рассылку прогноза погоды!");
+
+            } else {
+                sendMsg(message, "Вы уже подписаны!");
+
             }
+
+
             System.out.println("Пользователь с ID - " + update.getMessage().getChatId() + " подписался на прогноз погоды.");
         }
+
     }
 
 
