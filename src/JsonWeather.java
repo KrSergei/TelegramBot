@@ -32,7 +32,6 @@ public class JsonWeather {
     }
 
 
-
     public static URL createUrl(String link) {
         try {
             return new URL(link);
@@ -42,20 +41,22 @@ public class JsonWeather {
         }
     }
 
-    public static Object jsonGetTemp (String weather) throws ParseException {
+    public static Object jsonGetTemp(String weather) throws ParseException {
         JSONObject weatherJsonObject = (JSONObject) JSONValue.parseWithException(weather);
         JSONObject temp = (JSONObject) weatherJsonObject.get("main");
         return temp.get("temp");
 
     }
-    public static Object jsonGetHumidity (String weather) throws ParseException {
+
+    public static Object jsonGetHumidity(String weather) throws ParseException {
         JSONObject weatherJsonObject = (JSONObject) JSONValue.parseWithException(weather);
-      JSONObject humidity = (JSONObject) weatherJsonObject.get("main");
+        JSONObject humidity = (JSONObject) weatherJsonObject.get("main");
         return humidity.get("humidity");
-}
-    public static Object jsonGetPressure (String weather) throws ParseException {
+    }
+
+    public static Object jsonGetPressure(String weather) throws ParseException {
         JSONObject weatherJsonObject = (JSONObject) JSONValue.parseWithException(weather);
         JSONObject pressure = (JSONObject) weatherJsonObject.get("main");
         return pressure.get("pressure");
-}
+    }
 }

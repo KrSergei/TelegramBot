@@ -10,13 +10,11 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Time;
-import java.util.TimeZone;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 import java.sql.Date;
 
 import static java.util.Calendar.*;
+
 
 public class Bot extends TelegramLongPollingBot {
 
@@ -34,34 +32,40 @@ public class Bot extends TelegramLongPollingBot {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-            }
-            else
+                System.out.println("Пользователь с ID - " + update.getMessage().getChatId() + " запросил погоду.");
+            } else
                 sendMsg(message, "Hello, " + message.getFrom().getFirstName());
         }
-        System.out.println("Пользователь с ID - " + update.getMessage().getChatId() + " запросил погоду.");
 
         if (message.getText().equals("Subscribe")) {
-            if (ConnectDB.conn == null ) {
-                try {
-                    ConnectDB.Conn();
-                    ConnectDB.WriteDB( update.getMessage().getChatId(), new Date(getInstance().getTimeInMillis()));
-                    ConnectDB.CloseDB();
+            try {
+                ConnectDB.Conn();
+                ConnectDB.Subscribe(update.getMessage().getChatId(), new Date(getInstance().getTimeInMillis()));
+                ConnectDB.CloseDB();
 
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-                sendMsg(message, "Вы подписались на рассылку прогноза погоды!");
-
-            } else {
-                sendMsg(message, "Вы уже подписаны!");
-
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-
-
+            sendMsg(message, "Вы подписались на рассылку прогноза погоды!");
             System.out.println("Пользователь с ID - " + update.getMessage().getChatId() + " подписался на прогноз погоды.");
+        }
+
+
+        if (message.getText().equals("Unsubscribe")) {
+            try {
+                ConnectDB.Conn();
+                ConnectDB.Unsubscribe(update.getMessage().getChatId());
+                ConnectDB.CloseDB();
+
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            sendMsg(message, "Вы отписались от рассылки прогноза погоды!");
+            System.out.println("Пользователь с ID - " + update.getMessage().getChatId() + " отписался от прогноза погоды!");
         }
 
     }
@@ -70,6 +74,14 @@ public class Bot extends TelegramLongPollingBot {
     private void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
+//        sendMessage.setChatId(message.getChatId().toString());
+//        try {
+//            sendMessage.setText("Сейчас погода в Петербурге: \nтемпература " + JsonWeather.jsonGetTemp(getWeaher()) + " C"
+//                    + "\nвлажность " + JsonWeather.jsonGetHumidity(getWeaher()) + "%"
+//                    + "\nдавление " + JsonWeather.jsonGetPressure(getWeaher()) + " мм.ртс");
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
 
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
@@ -122,7 +134,7 @@ public class Bot extends TelegramLongPollingBot {
     public static final String WEATHER_URL =
             "http://api.openweathermap.org/data/2.5/weather?q=Saint Petersburg,ru" + "&units=metric&appid=241de9349721df959d8800c12ca4f1f3";
 
-    private String getWeaher (){
+    private String getWeaher() {
         URL url = JsonWeather.createUrl(WEATHER_URL);
 
         // загружаем Json в виде Java строки
@@ -131,4 +143,33 @@ public class Bot extends TelegramLongPollingBot {
 
         return resultJson;
     }
+
+    public class SendByTime extends TimerTask {
+
+        @Override
+        public void run() {
+            try {
+                int chatId = ConnectDB.GetChatId();
+
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                ConnectDB.Conn();
+//             ConnectDB.GetChatId();
+                ConnectDB.CloseDB();
+
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
 }
